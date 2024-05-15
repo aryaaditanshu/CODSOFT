@@ -1,0 +1,60 @@
+import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class QuizApplication {
+    private static final int NUM_QUESTIONS = 3; // Number of questions in the quiz
+    private static final int TIME_LIMIT = 10; // Time limit for each question in seconds
+    private static int score = 0; // Score of the user
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String[] questions = {
+            "What is the capital of France?",
+            "What is the largest planet in our solar system?",
+            "Who wrote the play Romeo and Juliet?"
+        };
+        String[][] options = {
+            {"Paris", "London", "Berlin", "Madrid"},
+            {"Jupiter", "Saturn", "Earth", "Mars"},
+            {"William Shakespeare", "Charles Dickens", "Jane Austen", "Mark Twain"}
+        };
+        int[] answers = {1, 1, 1}; // Correct answer indices (starting from 1)
+
+        System.out.println("Welcome to the Quiz Application!");
+
+        for (int i = 0; i < NUM_QUESTIONS; i++) {
+            System.out.println("\nQuestion " + (i + 1) + ": " + questions[i]);
+            for (int j = 0; j < options[i].length; j++) {
+                System.out.println((j + 1) + ". " + options[i][j]);
+            }
+
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    System.out.println("Time's up!");
+                    scanner.close();
+                    System.exit(0);
+                }
+            }, TIME_LIMIT * 1000);
+
+            System.out.print("Enter your answer (1-" + options[i].length + "): ");
+            int userAnswer = scanner.nextInt();
+
+            if (userAnswer == answers[i]) {
+                score++;
+                System.out.println("Correct answer!");
+            } else {
+                System.out.println("Incorrect answer. The correct answer is " + options[i][answers[i] - 1]);
+            }
+
+            timer.cancel();
+        }
+
+        System.out.println("\nQuiz completed!");
+        System.out.println("Your final score is: " + score + "/" + NUM_QUESTIONS);
+
+        scanner.close();
+    }
+}
